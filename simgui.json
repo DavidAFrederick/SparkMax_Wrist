@@ -1,0 +1,11 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Wrist": "Subsystem"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  }
+}
