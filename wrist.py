@@ -11,6 +11,7 @@ from rev import SparkMax
 from rev import SparkLowLevel
 from rev import SparkBaseConfig 
 from rev import SparkBase
+from rev import SparkLimitSwitch
 
 #  >>>  NEED TO UPDATE 'pyproject.toml' to enable 'rev' then run "sync" command
 #  Here is the API for SparkMax
@@ -89,12 +90,17 @@ class WristControl(Subsystem):
 
         rev_motor_config = SparkBaseConfig()
         rev_motor_config.inverted(False)
-        rev_motor_config.IdleMode.kBrake
+        # rev_motor_config.IdleMode.kBrake   ##  Does not seem to be working.
+        rev_motor_config.IdleMode.kCoast
 
         # Apply the configuration
         self.spark_max_wrist_motor.configure(rev_motor_config, SparkBase.ResetMode.kResetSafeParameters, 
                                              SparkBase.PersistMode.kPersistParameters)
         
+        # m_forwardLimit = self.spark_max_wrist_motor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed)
+        self.forwardLimit = self.spark_max_wrist_motor.getForwardLimitSwitch()
+        self.reverseLimit = self.spark_max_wrist_motor.getReverseLimitSwitch()
+
 # https://docs.revrobotics.com/revlib/24-to-25
 
 
@@ -165,6 +171,7 @@ class WristControl(Subsystem):
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
     def Wrist_at_Top_SparkMax(self) -> bool:
+        SmartDashboard.putBoolean("test", self.m_forwardLimit.get())
         # is_forward_limit_pressed = self.spark_max_wrist_motor.getForwardLimitSwitch()  
         is_forward_limit_pressed = False  
         SmartDashboard.putBoolean("Spark - Wrist at Bottom ", is_forward_limit_pressed)  ## Need to check directions
@@ -199,6 +206,10 @@ class WristControl(Subsystem):
         SmartDashboard.putBoolean("Spark_Wrist_Top", self.Wrist_at_Top_SparkMax())
         SmartDashboard.putBoolean("Wrist_Bottom", self.Wrist_at_Bottom())
         SmartDashboard.putBoolean("Wrist_Top", self.Wrist_at_Top())
+
+        
+        
+
 
 
     def move_wrist_up(self, speed: float):
@@ -266,7 +277,9 @@ class SetWrist_Manual(Command):
         pass
 
     def execute(self):
-        self._Wrist.move_wrist(self._controller.getLeftY())
+        speed = self._controller.getLeftY()
+        speed = speed * 0.1
+        self._Wrist.move_wrist(speed)
 
     def isFinished(self) -> bool:
         return False
