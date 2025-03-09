@@ -97,47 +97,10 @@ class WristControl(Subsystem):
         self.spark_max_wrist_motor.configure(rev_motor_config, SparkBase.ResetMode.kResetSafeParameters, 
                                              SparkBase.PersistMode.kPersistParameters)
         
-        # m_forwardLimit = self.spark_max_wrist_motor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyClosed)
-        self.forwardLimit = self.spark_max_wrist_motor.getForwardLimitSwitch()
-        self.reverseLimit = self.spark_max_wrist_motor.getReverseLimitSwitch()
+        self.wrist_motor_forwardLimit = self.spark_max_wrist_motor.getForwardLimitSwitch()
+        self.wrist_motor_reverseLimit = self.spark_max_wrist_motor.getReverseLimitSwitch()
 
-# https://docs.revrobotics.com/revlib/24-to-25
-
-
-#https://www.google.com/search?q=SparkBaseConfig%28%29+sparkmax+example+python+code&sca_esv=248c1a1232d6ce85&sxsrf=AHTn8zq3kMBxxXjqTYPT9e6Ka9rcIG1mbA%3A1741535056151&ei=ULfNZ-DnCJqp5NoP-qXg4Qk&ved=0ahUKEwjgz4rTq_2LAxWaFFkFHfoSOJwQ4dUDCBA&uact=5&oq=SparkBaseConfig%28%29+sparkmax+example+python+code&gs_lp=Egxnd3Mtd2l6LXNlcnAiLlNwYXJrQmFzZUNvbmZpZygpIHNwYXJrbWF4IGV4YW1wbGUgcHl0aG9uIGNvZGUyBxAhGKABGAoyBxAhGKABGAoyBxAhGKABGAoyBRAhGKsCSJZkUPATWNtPcAN4AJABAJgB4QGgAb4XqgEGMjAuOS4xuAEDyAEA-AEC-AEBmAIhoAKoGMICBxAjGLADGCfCAggQABiwAxjvBcICCxAAGIAEGLADGKIEwgIFEAAY7wXCAggQABiABBiiBMICCBAAGKIEGIkFmAMAiAYBkAYFkgcHMTYuMTYuMaAHkKQB&sclient=gws-wiz-serp
-
-#  Example code:
-#  https://github.com/frc4531/2025-robot-code
-
-# https://www.google.com/search?q=frc+sparkmax+python+example+code+2025&oq=frc+sparkmax+python+example+code+2025&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIJCAEQIRgKGKABMgkIAhAhGAoYoAEyCQgDECEYChigATIJCAQQIRgKGKABMgkIBRAhGAoYoAHSAQkxNjg0NGowajeoAgiwAgHxBVMs3CmvF_3n&sourceid=chrome&ie=UTF-8
-
-# import wpilib
-# from rev import CANSparkMax, CANSparkMaxLowLevel
-
-#  # Initialize the SPARK MAX with its CAN ID and motor type
-#         self.spark_max = CANSparkMax(1, CANSparkMaxLowLevel.MotorType.kBrushless)
-
-#     def teleopPeriodic(self):
-#         # Set motor speed based on joystick input (example)
-#         joystick = wpilib.Joystick(0)
-#         speed = joystick.getRawAxis(1)  # Assuming throttle axis controls speed
-#         self.spark_max.set(speed)
-
-
-    # - - (Example reading limit switches) - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-    # def check_limit_switches(self):
-    #     is_forward_limit_pressed = self.spark_max_wrist_motor.getForwardLimitSwitch().
-    #     is_reverse_limit_pressed = self.spark_max_wrist_motor.getReverseLimitSwitch()
-    #     is_reverse_limit_pressed = self.spark_max_wrist_motor.get
-
-    #     if is_forward_limit_pressed:
-    #         print("Forward limit switch is pressed") 
-
-    #     if is_reverse_limit_pressed:
-    #         print("Reverse limit switch is pressed") 
-
-    ###
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
     def __configure_wrist_encoder(self) -> DutyCycleEncoder:
         wrist_encoder = DutyCycleEncoder(constants.WRIST_ANGLE_ENCODER)  # DIO port
@@ -171,16 +134,13 @@ class WristControl(Subsystem):
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
     def Wrist_at_Top_SparkMax(self) -> bool:
-        SmartDashboard.putBoolean("test", self.m_forwardLimit.get())
-        # is_forward_limit_pressed = self.spark_max_wrist_motor.getForwardLimitSwitch()  
-        is_forward_limit_pressed = False  
-        SmartDashboard.putBoolean("Spark - Wrist at Bottom ", is_forward_limit_pressed)  ## Need to check directions
+        is_forward_limit_pressed = self.wrist_motor_forwardLimit.get()
+        SmartDashboard.putBoolean("Spark - Wrist at Forward ", is_forward_limit_pressed)  ## Need to check directions
         return is_forward_limit_pressed
 
     def Wrist_at_Bottom_SparkMax(self) -> bool:
-        # is_reverse_limit_pressed = self.spark_max_wrist_motor.getReverseLimitSwitch() 
-        is_reverse_limit_pressed = False
-        SmartDashboard.putBoolean("Spark - Wrist at Top", is_reverse_limit_pressed)
+        is_reverse_limit_pressed = self.wrist_motor_reverseLimit.get()
+        SmartDashboard.putBoolean("Spark - Wrist at Reverse", is_reverse_limit_pressed)
         return is_reverse_limit_pressed
     
 
