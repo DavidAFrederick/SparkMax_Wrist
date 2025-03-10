@@ -21,6 +21,10 @@ from rev import SparkLimitSwitch
 # The Sparkmax library changed in 2025.  Difficult to find working examples
 #
 # https://www.chiefdelphi.com/t/rev-spark-max-migration-to-2025/479555/4
+#
+# Found Example code in the FRC Kitbot software.  Look under "Code and software guides"
+# Download and Unzip the file
+#  https://www.firstinspires.org/resource-library/frc/kitbot
 
 #===(Hardware Notes)==============================================
 '''
