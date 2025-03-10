@@ -92,6 +92,7 @@ class WristControl(Subsystem):
         rev_motor_config.inverted(False)
         # rev_motor_config.IdleMode.kBrake   ##  Does not seem to be working.
         rev_motor_config.IdleMode.kCoast
+        rev_motor_config.smartCurrentLimit(10)  # Amps
 
         # Apply the configuration
         self.spark_max_wrist_motor.configure(rev_motor_config, SparkBase.ResetMode.kResetSafeParameters, 
